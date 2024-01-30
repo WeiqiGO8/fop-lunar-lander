@@ -1,15 +1,18 @@
-//Step 0 - setup the canvas
-let obstaclesX = 600;
+let obstaclesX = 900;
+let velocity = 0.2;
+let acceleration = 0.09;
 
+//Step 0 - setup the canvas
 function setUp() {
   createCanvas(600, 300);
   background(255, 255, 255);
 }
 
-//Step 2 - Draw the scenary/background
+//Step 1 - Draw the scenary/background
 function scenary() {
   push();
   noStroke();
+
   //draw the sky
   fill(200, 255, 255);
   rect(0, 0, width, height);
@@ -20,13 +23,16 @@ function scenary() {
   pop();
 }
 
+//step 2 - Draw the obstacles
+
 function obstacles(x, y) {
   push();
   fill(55, 55, 55);
-  rect(500, 350, 100, 100);
+  rect(0, 0, 100, 100);
   pop();
 }
 
+//step 3 - Draw the vehicle
 function vehicle(x, y) {
   push();
   translate(x, y);
