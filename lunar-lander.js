@@ -1,7 +1,3 @@
-let obstaclesX = 900;
-let velocity = 0.2;
-let acceleration = 0.09;
-
 //Step 0 - setup the canvas
 function setUp() {
   createCanvas(600, 300);
@@ -28,7 +24,7 @@ function scenary() {
 function obstacles(x, y) {
   push();
   fill(55, 55, 55);
-  rect(0, 0, 100, 100);
+  rect(500, 300, 100, 100);
   pop();
 }
 
@@ -52,8 +48,14 @@ function vehicle(x, y) {
   pop();
 }
 
+let obstaclesX = 600;
+let vehicleY = 100;
+let velocity = 0.2;
+let acceleration = 0.09;
+let gameIsRunning = true;
+
 function draw() {
   scenary();
   obstacles(obstaclesX, 150);
-  vehicle(100, 200);
+  vehicle(100, vehicleY);
 }
