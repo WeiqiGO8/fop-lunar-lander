@@ -48,11 +48,19 @@ function vehicle(x, y) {
   pop();
 }
 
-let obstaclesX = 600;
-let vehicleY = 100;
-let velocity = 0.2;
-let acceleration = 0.09;
-let gameIsRunning = true;
+let values = [];
+
+for (let i = 0; i < 200; i++) {
+  let value = {
+    obstaclesX: 600,
+    vehicleY: 100,
+    velocity: 0.2,
+    acceleration: 0.09,
+    gameIsRunning: true,
+  };
+
+  values.push(value);
+}
 
 function draw() {
   scenary();
