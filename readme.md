@@ -2,28 +2,36 @@
 
 ### Rules
 
-- Vehicle can move up and down with up-arrow || spacebar on keyboard
-- Obstacles move to the left
-- Vehicle falls down to the ground because of gravity
+- The game have 3 different states/screens
+
+  - A start screen
+  - A game screen/The actual game
+  - Game over screen --> have the ability to restart the game from this screen
+
+- Control the thruster / Vehicle can move up and down with up-arrow and/or spacebar on keyboard
+- Obstacles moves from the right to the left
+- Vehicle falls down to the ground because of gravity --> velocity is not linear
 - Vehicle goes up when clicking the up-key or spacebar
-- If vehicle collides with obstacles or ground, the game is over
+- If vehicle collides with obstacles || ground, the game is over
 
-#### Order to build
+### Building blocks
 
-1. Create the canvas
-2. Create an array for the values
+- Create the canvas
+- Create a variable boolean --> Game is running --> true/false for an if-statement
+- Create objects and arrays for the :
 
-   - Create an object containing the different values for x, y, velocity, acceleration, etc.
-   - Create an object containing the key-arrow/spacebar values
-   - Create a variable boolean --> Game is running - true/false for an if-statement
+  - The values --> x, y, velocity, acceleration, etc.
+  - The keyboard inputs - key-arrow/spacebar
+  - The different states/game modes
 
-3. Draw the background (with a function)
-4. Draw the obstacles (with a function for each obstacle)
+- Draw the background (with a function)
+- Draw the obstacles (with a function for each obstacle)
 
-   - Create x# of obstacles (use an array?)?
+  - Create x#(3) of obstacles (use an array?)?
 
-5. Draw the vehicle (with a function)
-6. Add gravity to the vehicle
-7. Make the vehicle fly
-8. Detect collision between ground and vehicle
-9. Detect collision between the obstacle and vehicle
+- Draw the vehicle (with a function)
+
+  - Add gravity to the vehicle
+  - Make the vehicle fly/control the thruster
+
+- Detect collision between ground / the obstacles and vehicle
