@@ -58,7 +58,7 @@ function obstacle1(x, y) {
   push();
   translate(x, y);
 
-  //obstacle # 1 - a house
+  //obstacle #1 - a house
   noStroke();
 
   //base house
@@ -78,6 +78,58 @@ function obstacle1(x, y) {
   strokeWeight(3);
   line(65, 40, 65, 90);
   line(40, 65, 90, 65);
+
+  pop();
+}
+
+//obstacle #2
+function obstacle2(x, y) {
+  push();
+  translate(x, y);
+  noStroke();
+
+  //base
+  fill(100, 100, 100);
+  rect(0, 0, 150, 260);
+
+  //left side windows
+  fill(255, 185, 0);
+  rect(15, 20, 40, 40);
+  rect(15, 70, 40, 40);
+  rect(15, 120, 40, 40);
+  rect(15, 170, 40, 40);
+
+  //right side windows
+  rect(95, 20, 40, 40);
+  rect(95, 70, 40, 40);
+  rect(95, 120, 40, 40);
+  rect(95, 170, 40, 40);
+
+  //door
+  fill(155, 120, 80);
+  rect(55, 220, 30, 40);
+  fill(0, 0, 0);
+  ellipse(60, 240, 6);
+
+  pop();
+}
+
+function obstacle3(x, y) {
+  push();
+  translate(x, y);
+  noStroke();
+
+  //pole
+  fill(85, 85, 85);
+  rect(15, -300, 20, 300);
+
+  //base
+  fill(85, 85, 85);
+  rect(0, 0, 50, 20);
+
+  //light
+  fill(255, 255, 0);
+  ellipse(23, -320, 60);
 
   pop();
 }
@@ -104,9 +156,22 @@ function vehicle(x, y) {
   pop();
 }
 
+//array for the obstacles
+let arrayObstacles = [];
+
 // step # - create the draw function to make the canvas and the content visable
 function draw() {
+  //scenary/background
   scenary();
-  obstacle1(600, 430);
+
+  //obstacles --> array
+  let obstacle = [
+    obstacle1(600, 430),
+    obstacle2(690, 320),
+    obstacle3(800, 560),
+  ];
+  arrayObstacles.push(obstacle);
+
+  //vehicle
   vehicle(80, 200);
 }
