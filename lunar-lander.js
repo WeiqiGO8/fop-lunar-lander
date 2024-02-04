@@ -7,9 +7,9 @@ let keyboard = [];
 
 //create objects
 let value = {
-  x: 100,
+  x: 600,
   y: 100,
-  obstacleX: 600,
+  obstacleX: 900,
   vehicleY: 100,
   velocity: 0.2,
   acceleration: 0.09,
@@ -166,12 +166,38 @@ function draw() {
 
   //obstacles --> array
   let obstacle = [
-    obstacle1(600, 430),
-    obstacle2(690, 320),
-    obstacle3(800, 560),
+    obstacle1(value.x, 430),
+    obstacle2(value.x, 320),
+    obstacle3(value.x, 560),
   ];
   arrayObstacles.push(obstacle);
 
   //vehicle
-  vehicle(80, 200);
+  vehicle(80, value.y);
+
+  if (gameIsRunning === true) {
+    value.x += -4;
+  }
+
+  if (value.x < -250) {
+    value.x = width;
+  }
+
+  value.y += value.velocity;
+  value.velocity += value.acceleration;
+
+  if (keyIsDown(key.spacebar)) {
+    value.velocity -= 0.5;
+    value.acceleration -= 0.001;
+    console.log("spacebar is pressed");
+  } else if (keyIsDown(key.arrowUp)) {
+    value.velocity -= 0.5;
+    value.acceleration -= 0.001;
+    console.log("up-arrow is pressed");
+  }
+
+  if (value.y > 200) {
+    gameIsRunning = false;
+    console.log("game over");
+  }
 }
