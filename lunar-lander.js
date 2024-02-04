@@ -1,9 +1,11 @@
 //varables
 let gameIsRunning = true;
+let state = "game";
 
 //arrays
 let values = [];
 let keyboard = [];
+let arrayObstacles = [];
 
 //create objects
 let value = {
@@ -28,7 +30,16 @@ let key = {
 
 keyboard.push(key);
 
-let state = "start";
+//obstacles --> array
+for (let o = 0; o > 3; o++) {
+  let obstacle = [
+    obstacle1(value.x, 430),
+    obstacle2(value.x, 320),
+    obstacle3(value.x, 560),
+  ];
+
+  arrayObstacles.push(obstacle);
+}
 
 //setup the canvas
 function setUp() {
@@ -158,44 +169,22 @@ function vehicle(x, y) {
   pop();
 }
 
-function start() {
+function startScreen() {
   console.log("start screen");
+  startScreen();
 }
 
-function game() {
-  conosle.log("game screen");
-}
+function gameScreen() {
+  //scenary/background
+  scenary();
 
-function end() {
-  console.log("game has ended");
-}
+  //vehicle
+  vehicle(80, value.y);
 
-//array for the obstacles
-let arrayObstacles = [];
-
-//obstacles --> array
-let obstacle = [
-  obstacle1(value.x, 430),
-  obstacle2(value.x, 320),
-  obstacle3(value.x, 560),
-];
-
-arrayObstacles.push(obstacle);
-
-// step # - create the draw function to make the canvas and the content visable
-function draw() {
-  if (state === "start") {
-    console.log("start screen");
-    scenary();
-  } else if (state === "game") {
+  if (gameIsRunning === true) {
     console.log("game screen");
 
-    //scenary/background
-    scenary();
-
-    if (gameIsRunning === true) {
-      value.x += -4;
-    }
+    value.x += -4;
 
     if (value.x < -250) {
       value.x = width;
@@ -213,15 +202,26 @@ function draw() {
       value.acceleration -= 0.001;
       console.log("up-arrow is pressed");
     }
+  }
+}
 
-    if (value.y > 200) {
-      gameIsRunning = false;
-      console.log("game over");
-    }
+function endScreen() {
+  if (value.y > 200) {
+    gameIsRunning = false;
+    console.log("game over");
+  }
+}
 
-    //vehicle
-    vehicle(80, value.y);
-  } else if (state === "game-over") {
+// step # - create the draw function to make the canvas and the content visable
+function draw() {
+  if (state === "start") {
+    startScreen();
+    console.log("start screen");
+  } else if (state === "game") {
+    gameScreen();
+    console.log("game screen");
+  } else if (state === "end") {
+    endScreen();
     console.log("game over");
   }
 }
