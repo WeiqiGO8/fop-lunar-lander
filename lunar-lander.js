@@ -11,7 +11,7 @@ let arrayObstacles = [];
 let value = {
   x: 600,
   y: 100,
-  obstacleX: 900,
+  obstacleX: 600,
   vehicleY: 100,
   velocity: 0.2,
   acceleration: 0.09,
@@ -33,9 +33,9 @@ keyboard.push(key);
 //obstacles --> array
 for (let o = 0; o > 3; o++) {
   let obstacle = [
-    obstacle1(value.x, 430),
-    obstacle2(value.x, 320),
-    obstacle3(value.x, 560),
+    obstacle1(value.obstacleX, 430),
+    obstacle2(value.obstacleX, 320),
+    obstacle3(value.obstacleX, 560),
   ];
 
   arrayObstacles.push(obstacle);
@@ -171,7 +171,7 @@ function vehicle(x, y) {
 
 function startScreen() {
   console.log("start screen");
-  startScreen();
+  scenary();
 }
 
 function gameScreen() {
@@ -179,18 +179,18 @@ function gameScreen() {
   scenary();
 
   //vehicle
-  vehicle(80, value.y);
+  vehicle(80, value.vehicleY);
 
   if (gameIsRunning === true) {
     console.log("game screen");
 
-    value.x += -4;
+    value.obstacleX += -4;
 
-    if (value.x < -250) {
-      value.x = width;
+    if (value.obstacleX < -250) {
+      value.obstacleX = width;
     }
 
-    value.y += value.velocity;
+    value.vehicleY += value.velocity;
     value.velocity += value.acceleration;
 
     if (keyIsDown(key.spacebar)) {
@@ -206,7 +206,7 @@ function gameScreen() {
 }
 
 function endScreen() {
-  if (value.y > 200) {
+  if (value.vehicleY > 200) {
     gameIsRunning = false;
     console.log("game over");
   }
