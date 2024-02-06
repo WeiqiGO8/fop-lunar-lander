@@ -1,6 +1,8 @@
+angleMode(DEGREES);
 //varables
+let state = "start";
 let gameIsRunning = true;
-let state = "game";
+let buttonIsPressed = false;
 
 //arrays
 let values = [];
@@ -9,12 +11,9 @@ let arrayObstacles = [];
 
 //create objects
 let value = {
-  x: 600,
-  y: 100,
-  obstacleX: 600,
-  vehicleY: 100,
-  velocity: 0.2,
-  acceleration: 0.09,
+  vehicleY: 90,
+  velocity: 0.5,
+  acceleration: 0.1,
   gameIsRunning: true,
 };
 
@@ -30,16 +29,25 @@ let key = {
 
 keyboard.push(key);
 
-//obstacles --> array
-for (let o = 0; o > 3; o++) {
-  let obstacle = [
-    obstacle1(value.obstacleX, 430),
-    obstacle2(value.obstacleX, 320),
-    obstacle3(value.obstacleX, 560),
-  ];
+//obstacles --> array with objects inside
+//the following 5 rows of code was added courtesy of Teacher Garrit Schaap / 2024-02-06
+arrayObstacles.push({
+  x: 600,
+  y: 430,
+  draw: obstacle1,
+});
 
-  arrayObstacles.push(obstacle);
-}
+arrayObstacles.push({
+  x: 600,
+  y: 320,
+  draw: obstacle2,
+});
+
+arrayObstacles.push({
+  x: 600,
+  y: 560,
+  draw: obstacle3,
+});
 
 //setup the canvas
 function setUp() {
@@ -59,7 +67,7 @@ function scenary() {
 
   //the sun
   fill(255, 255, 0);
-  ellipse(780, 50, 200);
+  ellipse(580, 50, 200);
 
   //the ground
   fill(10, 170, 10);
@@ -170,58 +178,94 @@ function vehicle(x, y) {
 }
 
 function startScreen() {
-  console.log("start screen");
+  push();
   scenary();
+
+  //start button
+  rect(230, 200, 200, 80);
+  text("start game", 300, 240);
+
+  pop();
 }
 
 function gameScreen() {
-  //scenary/background
   scenary();
 
-  //vehicle
   vehicle(80, value.vehicleY);
 
   if (gameIsRunning === true) {
-    console.log("game screen");
-
-    value.obstacleX += -4;
-
-    if (value.obstacleX < -250) {
-      value.obstacleX = width;
-    }
-
     value.vehicleY += value.velocity;
     value.velocity += value.acceleration;
 
     if (keyIsDown(key.spacebar)) {
       value.velocity -= 0.5;
-      value.acceleration -= 0.001;
+      value.acceleration -= 0.005;
       console.log("spacebar is pressed");
     } else if (keyIsDown(key.arrowUp)) {
       value.velocity -= 0.5;
-      value.acceleration -= 0.001;
+      value.acceleration -= 0.002;
       console.log("up-arrow is pressed");
+    }
+
+    for (let obstacle of arrayObstacles) {
+      console.log(obstacle);
+      obstacle.draw(obstacle.x, obstacle.y);
+      obstacle.x += -4;
+
+      if (obstacle.x < -250) {
+        obstacle.x = width;
+      }
     }
   }
 }
 
-function endScreen() {
-  if (value.vehicleY > 200) {
-    gameIsRunning = false;
-    console.log("game over");
+function resultScreen() {
+  scenary();
+
+  rect(230, 200, 100, 100);
+  text("restart game", 250, 250);
+}
+
+//function to click buttons
+function mouseClicked() {
+  if (
+    //start game button
+    mouseX > 230 &&
+    mouseX < 230 + 200 &&
+    mouseY > 200 &&
+    mouseY < 200 + 80
+  ) {
+    console.log("start game");
+    state = "game";
+  } else if (
+    //restart game button
+    mouseX > 230 &&
+    mouseX < 230 + 100 &&
+    mouseY > 200 &&
+    mouseY < 200 + 100
+  ) {
+    console.log("restart game");
+    state = "game";
   }
 }
 
-// step # - create the draw function to make the canvas and the content visable
+//create the draw function to make the canvas and the content visable
 function draw() {
   if (state === "start") {
     startScreen();
-    console.log("start screen");
   } else if (state === "game") {
     gameScreen();
-    console.log("game screen");
+    if (value.vehicleY > 500) {
+      gameIsRunning = false;
+      console.log("you won!");
+      state = "end";
+    } else if (value.vehicleY > 510) {
+      gameIsRunning = false;
+      state = "end";
+      console.log("you crashed!");
+      // state = "end";
+    }
   } else if (state === "end") {
-    endScreen();
-    console.log("game over");
+    resultScreen();
   }
 }
