@@ -13,6 +13,7 @@ Land the vehicle safely on the ground without colliding with any obstacles. You 
   - Game over screen --> have the ability to restart the game from this screen
 
 - Control the thruster / Vehicle can move up and down with up-arrow and/or spacebar on keyboard
+- Vehicle can move from side to side with the right-arrow/left-arrow keys
 - Obstacles moves from the right to the left
 - Vehicle falls down to the ground because of gravity --> velocity is not linear
 - Vehicle goes up when clicking the up-key or spacebar

@@ -183,8 +183,9 @@ function startScreen() {
   scenary();
 
   //start button
-  rect(230, 200, 200, 80);
-  text("start game", 300, 240);
+  rect(175, 200, 230, 60);
+  textSize(20);
+  text("Start Game", 235, 235);
 
   pop();
 }
@@ -221,6 +222,8 @@ function gameScreen() {
         state = "end";
       } else {
         console.log("You lost");
+        rect(175, 90, 230, 100);
+
         state = "end";
       }
     }
@@ -229,19 +232,33 @@ function gameScreen() {
 
 function resultScreen() {
   scenary();
+  if (value.velocity < 5) {
+    //win box
+    rect(175, 90, 230, 100);
+    //The following 1 line of code was addapted from: https://www.geeksforgeeks.org/p5-js-textsize-function/ - 2024-02-07
+    textSize(50);
+    text("WINNER", 190, 155);
+  } else {
+    //loss box
+    rect(175, 90, 230, 100);
+    textSize(50);
+    text("LOSS", 220, 155);
+  }
 
-  rect(230, 200, 100, 100);
-  text("restart game", 250, 250);
+  //restart button
+  rect(175, 200, 230, 60);
+  textSize(20);
+  text("Restart Game", 235, 235);
 }
 
 //function to click buttons
 function mouseClicked() {
   if (
     //start game button
-    mouseX > 230 &&
-    mouseX < 230 + 200 &&
+    mouseX > 175 &&
+    mouseX < 175 + 230 &&
     mouseY > 200 &&
-    mouseY < 200 + 80 &&
+    mouseY < 200 + 60 &&
     state === "start"
   ) {
     value.vehicleY = 90;
@@ -249,10 +266,10 @@ function mouseClicked() {
     state = "game";
   } else if (
     //restart game button
-    mouseX > 230 &&
-    mouseX < 230 + 100 &&
+    mouseX > 175 &&
+    mouseX < 175 + 230 &&
     mouseY > 200 &&
-    mouseY < 200 + 100 &&
+    mouseY < 200 + 60 &&
     state === "end"
   ) {
     value.vehicleY = 90;
