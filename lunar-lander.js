@@ -1,23 +1,24 @@
 angleMode(DEGREES);
 //varables
 let state = "start";
-let gameIsRunning = true;
 let buttonIsPressed = false;
 
 //arrays
-let values = [];
+// let values = [];
 let keyboard = [];
 let arrayObstacles = [];
 
 //create objects
 let value = {
   vehicleY: 90,
+  vehicleX: 80,
   velocity: 0.5,
   acceleration: 0.1,
+  crashSpeed: 0,
   gameIsRunning: true,
 };
 
-values.push(value);
+// values.push(value);
 
 let key = {
   arrowUp: 38,
@@ -29,8 +30,8 @@ let key = {
 
 keyboard.push(key);
 
-//obstacles --> array with objects inside
-//the following 5 rows of code was added courtesy of Teacher Garrit Schaap / 2024-02-06
+// obstacles --> array with objects inside
+// the following 5 rows of code was added courtesy of Teacher Garrit Schaap / 2024-02-06
 arrayObstacles.push({
   x: 600,
   y: 430,
@@ -190,30 +191,37 @@ function startScreen() {
 
 function gameScreen() {
   scenary();
-
-  vehicle(80, value.vehicleY);
-
-  if (gameIsRunning === true) {
+  vehicle(value.vehicleX, value.vehicleY);
+  if (state === "game") {
+    //how the vehicle falls
     value.vehicleY += value.velocity;
     value.velocity += value.acceleration;
 
+    //control the thrusters/speed with the spacebar or up-arrow
     if (keyIsDown(key.spacebar)) {
       value.velocity -= 0.5;
-      value.acceleration -= 0.005;
-      console.log("spacebar is pressed");
     } else if (keyIsDown(key.arrowUp)) {
       value.velocity -= 0.5;
-      value.acceleration -= 0.002;
-      console.log("up-arrow is pressed");
     }
 
-    for (let obstacle of arrayObstacles) {
-      console.log(obstacle);
-      obstacle.draw(obstacle.x, obstacle.y);
-      obstacle.x += -4;
+    //control the position of the vehicle
+    if (keyIsDown(key.arrowRight)) {
+      value.vehicleX += 5;
+    } else if (keyIsDown(key.arrowLeft)) {
+      value.vehicleX -= 5;
+    }
 
-      if (obstacle.x < -250) {
-        obstacle.x = width;
+    if (value.vehicleY < 0) {
+      value.velocity = 0.5;
+    }
+
+    if (value.vehicleY > 500) {
+      if (value.velocity < 5) {
+        console.log("you won");
+        state = "end";
+      } else {
+        console.log("You lost");
+        state = "end";
       }
     }
   }
@@ -233,18 +241,22 @@ function mouseClicked() {
     mouseX > 230 &&
     mouseX < 230 + 200 &&
     mouseY > 200 &&
-    mouseY < 200 + 80
+    mouseY < 200 + 80 &&
+    state === "start"
   ) {
-    console.log("start game");
+    value.vehicleY = 90;
+    value.velocity = 0.5;
     state = "game";
   } else if (
     //restart game button
     mouseX > 230 &&
     mouseX < 230 + 100 &&
     mouseY > 200 &&
-    mouseY < 200 + 100
+    mouseY < 200 + 100 &&
+    state === "end"
   ) {
-    console.log("restart game");
+    value.vehicleY = 90;
+    value.velocity = 0.5;
     state = "game";
   }
 }
@@ -255,16 +267,7 @@ function draw() {
     startScreen();
   } else if (state === "game") {
     gameScreen();
-    if (value.vehicleY > 500) {
-      gameIsRunning = false;
-      console.log("you won!");
-      state = "end";
-    } else if (value.vehicleY > 510) {
-      gameIsRunning = false;
-      state = "end";
-      console.log("you crashed!");
-      // state = "end";
-    }
+    console.log(value.velocity);
   } else if (state === "end") {
     resultScreen();
   }
