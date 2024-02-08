@@ -33,19 +33,19 @@ keyboard.push(key);
 // obstacles --> array with objects inside
 // the following 5 rows of code was added courtesy of Teacher Garrit Schaap / 2024-02-06
 arrayObstacles.push({
-  x: 600,
+  x: Math.floor(Math.random() * 300),
   y: 430,
   draw: obstacle1,
 });
 
 arrayObstacles.push({
-  x: 600,
+  x: Math.floor(Math.random() * 100),
   y: 320,
   draw: obstacle2,
 });
 
 arrayObstacles.push({
-  x: 600,
+  x: Math.floor(Math.random() * 200),
   y: 560,
   draw: obstacle3,
 });
@@ -192,8 +192,20 @@ function startScreen() {
 
 function gameScreen() {
   scenary();
+
   vehicle(value.vehicleX, value.vehicleY);
   if (state === "game") {
+    //obstacle random x
+    for (let obstacle of arrayObstacles) {
+      console.log(obstacle);
+      obstacle.draw(obstacle.x, obstacle.y);
+      obstacle.x += -2;
+
+      if (obstacle.x < -250) {
+        obstacle.x = width;
+      }
+    }
+
     //how the vehicle falls
     value.vehicleY += value.velocity;
     value.velocity += value.acceleration;
