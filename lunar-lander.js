@@ -1,6 +1,7 @@
 angleMode(DEGREES);
 //varables
 let state = "start";
+let timeInGame = 0;
 
 //arrays
 let arrayObstacles = [];
@@ -9,9 +10,10 @@ let arrayObstacles = [];
 let value = {
   vehicleY: 90,
   vehicleX: 80,
+  vehicleDirection: 0,
+  friction: -0.1,
   velocity: 0.5,
   acceleration: 0.1,
-  crashSpeed: 0,
 };
 
 let key = {
@@ -25,19 +27,19 @@ let key = {
 // obstacles --> array with objects inside
 // the following 5 rows of code was added courtesy of Teacher Garrit Schaap / 2024-02-06
 arrayObstacles.push({
-  x: Math.floor(Math.random() * 100),
+  x: Math.floor(Math.random() * 2000),
   y: 430,
   draw: obstacle1,
 });
 
 arrayObstacles.push({
-  x: Math.floor(Math.random() * 100),
+  x: Math.floor(Math.random() * 2000),
   y: 320,
   draw: obstacle2,
 });
 
 arrayObstacles.push({
-  x: Math.floor(Math.random() * 100),
+  x: Math.floor(Math.random() * 2000),
   y: 560,
   draw: obstacle3,
 });
@@ -185,21 +187,45 @@ function startScreen() {
 function gameScreen() {
   scenary();
 
-  vehicle(value.vehicleX, value.vehicleY);
   if (state === "game") {
     //obstacle random x
     for (let obstacle of arrayObstacles) {
-      console.log(obstacle);
+      // console.log(obstacle);
       obstacle.draw(obstacle.x, obstacle.y);
       obstacle.x += -2;
 
       if (obstacle.x < -250) {
         obstacle.x = width;
+        obstacle.x = Math.floor(Math.random() * 2000 + width);
+      }
+
+      if (
+        // value.vehicleY > obstacle.y + 2 ||
+        value.vehicleDirection >
+        obstacle.x + 4
+      ) {
+        console.log("you hit an obstacle");
       }
     }
 
+    vehicle(value.vehicleX, value.vehicleY);
+
+    textSize(20);
+    text("Time", 25, 40);
+    text("Velocity", 25, 70);
+
+    text(timeInGame, 200, 40);
+    text(Math.floor(value.velocity), 200, 70);
+
     //how the vehicle falls
     value.vehicleY += value.velocity;
+    value.vehicleX += value.vehicleDirection;
+
+    if (value.vehicleDirection < 0) {
+      value.vehicleDirection -= value.friction;
+    } else if (value.vehicleDirection > 0) {
+      value.vehicleDirection += value.friction;
+    }
     value.velocity += value.acceleration;
 
     //control the thrusters/speed with the spacebar or up-arrow
@@ -210,15 +236,23 @@ function gameScreen() {
     }
 
     //control the position of the vehicle
+
     if (keyIsDown(key.arrowRight)) {
-      value.vehicleX += 5;
+      value.vehicleDirection += 0.5;
+      // console.log("right");
+      // console.log(value.vehicleDirection);
     } else if (keyIsDown(key.arrowLeft)) {
-      value.vehicleX -= 5;
+      value.vehicleDirection += -0.5;
+      // console.log(value.vehicleDirection);
     }
 
-    //controls that vehicle doesn't fly beyond the canvas height
+    //controls that vehicle doesn't fly beyond the canvas height or width
     if (value.vehicleY < 0) {
       value.velocity = 0.5;
+    } else if (value.vehicleX < -30) {
+      value.vehicleX = -30;
+    } else if (value.vehicleX > 570) {
+      value.vehicleX = 570;
     }
 
     //controls if the player win or loses the game
@@ -227,7 +261,6 @@ function gameScreen() {
         state = "end";
       } else {
         rect(175, 90, 230, 100);
-
         state = "end";
       }
     }
@@ -290,7 +323,7 @@ function draw() {
     startScreen();
   } else if (state === "game") {
     gameScreen();
-    console.log(value.velocity);
+    // console.log(value.velocity);
   } else if (state === "end") {
     resultScreen();
   }
