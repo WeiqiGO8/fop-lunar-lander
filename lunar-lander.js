@@ -1,8 +1,7 @@
 angleMode(DEGREES);
 //varables
 let state = "start";
-let timeInGame = 0;
-
+let timer = 4;
 //arrays
 let arrayObstacles = [];
 
@@ -190,21 +189,12 @@ function gameScreen() {
   if (state === "game") {
     //obstacle random x
     for (let obstacle of arrayObstacles) {
-      // console.log(obstacle);
       obstacle.draw(obstacle.x, obstacle.y);
       obstacle.x += -2;
 
       if (obstacle.x < -250) {
         obstacle.x = width;
         obstacle.x = Math.floor(Math.random() * 2000 + width);
-      }
-
-      if (
-        // value.vehicleY > obstacle.y + 2 ||
-        value.vehicleDirection >
-        obstacle.x + 4
-      ) {
-        console.log("you hit an obstacle");
       }
     }
 
@@ -214,7 +204,7 @@ function gameScreen() {
     text("Time", 25, 40);
     text("Velocity", 25, 70);
 
-    text(timeInGame, 200, 40);
+    text(timer, 200, 40);
     text(Math.floor(value.velocity), 200, 70);
 
     //how the vehicle falls
@@ -239,11 +229,8 @@ function gameScreen() {
 
     if (keyIsDown(key.arrowRight)) {
       value.vehicleDirection += 0.5;
-      // console.log("right");
-      // console.log(value.vehicleDirection);
     } else if (keyIsDown(key.arrowLeft)) {
       value.vehicleDirection += -0.5;
-      // console.log(value.vehicleDirection);
     }
 
     //controls that vehicle doesn't fly beyond the canvas height or width
@@ -255,12 +242,16 @@ function gameScreen() {
       value.vehicleX = 570;
     }
 
+    //The following 3 lines of code was adapted from: https://editor.p5js.org/marynotari/sketches/S1T2ZTMp- / 2024-02-08
+    if (frameCount % 60 === 0 && timer > 0) {
+      timer--;
+    }
+
     //controls if the player win or loses the game
     if (value.vehicleY > 500) {
       if (value.velocity < 5) {
         state = "end";
       } else {
-        rect(175, 90, 230, 100);
         state = "end";
       }
     }
@@ -275,6 +266,9 @@ function resultScreen() {
     //The following 1 line of code was addapted from: https://www.geeksforgeeks.org/p5-js-textsize-function/ - 2024-02-07
     textSize(50);
     text("WINNER", 190, 155);
+  }
+  if (timer === 0) {
+    console.log("timer ended");
   } else {
     //loss box
     rect(175, 90, 230, 100);
@@ -323,7 +317,6 @@ function draw() {
     startScreen();
   } else if (state === "game") {
     gameScreen();
-    // console.log(value.velocity);
   } else if (state === "end") {
     resultScreen();
   }
