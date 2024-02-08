@@ -1,11 +1,8 @@
 angleMode(DEGREES);
 //varables
 let state = "start";
-let buttonIsPressed = false;
 
 //arrays
-// let values = [];
-let keyboard = [];
 let arrayObstacles = [];
 
 //create objects
@@ -15,10 +12,7 @@ let value = {
   velocity: 0.5,
   acceleration: 0.1,
   crashSpeed: 0,
-  gameIsRunning: true,
 };
-
-// values.push(value);
 
 let key = {
   arrowUp: 38,
@@ -28,12 +22,10 @@ let key = {
   spacebar: 32,
 };
 
-keyboard.push(key);
-
 // obstacles --> array with objects inside
 // the following 5 rows of code was added courtesy of Teacher Garrit Schaap / 2024-02-06
 arrayObstacles.push({
-  x: Math.floor(Math.random() * 300),
+  x: Math.floor(Math.random() * 100),
   y: 430,
   draw: obstacle1,
 });
@@ -45,7 +37,7 @@ arrayObstacles.push({
 });
 
 arrayObstacles.push({
-  x: Math.floor(Math.random() * 200),
+  x: Math.floor(Math.random() * 100),
   y: 560,
   draw: obstacle3,
 });
@@ -224,16 +216,16 @@ function gameScreen() {
       value.vehicleX -= 5;
     }
 
+    //controls that vehicle doesn't fly beyond the canvas height
     if (value.vehicleY < 0) {
       value.velocity = 0.5;
     }
 
+    //controls if the player win or loses the game
     if (value.vehicleY > 500) {
       if (value.velocity < 5) {
-        console.log("you won");
         state = "end";
       } else {
-        console.log("You lost");
         rect(175, 90, 230, 100);
 
         state = "end";
@@ -275,6 +267,7 @@ function mouseClicked() {
   ) {
     value.vehicleY = 90;
     value.velocity = 0.5;
+    value.obstacleX = 600;
     state = "game";
   } else if (
     //restart game button
@@ -286,6 +279,7 @@ function mouseClicked() {
   ) {
     value.vehicleY = 90;
     value.velocity = 0.5;
+    value.obstacleX = 600;
     state = "game";
   }
 }
