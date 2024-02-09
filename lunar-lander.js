@@ -144,7 +144,7 @@ function obstacle3(x, y) {
 
   //light
   fill(255, 255, 0);
-  ellipse(23, -320, 60);
+  ellipse(10, 0, 60);
 
   pop();
 }
