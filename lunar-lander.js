@@ -39,7 +39,7 @@ arrayObstacles.push({
 
 arrayObstacles.push({
   x: Math.floor(Math.random() * 2000),
-  y: 560,
+  y: 280,
   draw: obstacle3,
 });
 
@@ -136,11 +136,11 @@ function obstacle3(x, y) {
 
   //pole
   fill(85, 85, 85);
-  rect(15, -300, 20, 300);
+  rect(0, 0, 20, 300);
 
   //base
   fill(85, 85, 85);
-  rect(0, 0, 50, 20);
+  rect(-15, 280, 50, 20);
 
   //light
   fill(255, 255, 0);
@@ -175,11 +175,24 @@ function startScreen() {
   push();
   scenary();
 
+  textSize(20);
+  text("Time", 25, 40);
+  text("Velocity", 25, 70);
+
+  text(timer, 200, 40);
+  text(Math.floor(value.velocity), 200, 70);
+
   //start button
   rect(175, 200, 230, 60);
   textSize(20);
   text("Start Game", 235, 235);
 
+  //instructions
+  rect(60, 300, 480, 200);
+  text("Instructions:", 80, 330);
+  text("You control the vehicles x position with", 80, 360);
+  text("the corresponding arrow key and control", 80, 385);
+  text("the thruster with the up-arrow key or the spacebar", 80, 410);
   pop();
 }
 
@@ -187,93 +200,142 @@ function gameScreen() {
   scenary();
 
   if (state === "game") {
+    //The following 3 lines of code was adapted from: https://editor.p5js.org/marynotari/sketches/S1T2ZTMp- / 2024-02-08
+    if (frameCount % 60 === 0 && timer > 0) {
+      timer--;
+    }
+
     //obstacle random x
     for (let obstacle of arrayObstacles) {
       obstacle.draw(obstacle.x, obstacle.y);
       obstacle.x += -2;
 
       if (obstacle.x < -250) {
-        obstacle.x = width;
+        // obstacle.x = width;
         obstacle.x = Math.floor(Math.random() * 2000 + width);
       }
-    }
 
-    vehicle(value.vehicleX, value.vehicleY);
-
-    textSize(20);
-    text("Time", 25, 40);
-    text("Velocity", 25, 70);
-
-    text(timer, 200, 40);
-    text(Math.floor(value.velocity), 200, 70);
-
-    //how the vehicle falls
-    value.vehicleY += value.velocity;
-    value.vehicleX += value.vehicleDirection;
-
-    if (value.vehicleDirection < 0) {
-      value.vehicleDirection -= value.friction;
-    } else if (value.vehicleDirection > 0) {
-      value.vehicleDirection += value.friction;
-    }
-    value.velocity += value.acceleration;
-
-    //control the thrusters/speed with the spacebar or up-arrow
-    if (keyIsDown(key.spacebar)) {
-      value.velocity -= 0.5;
-    } else if (keyIsDown(key.arrowUp)) {
-      value.velocity -= 0.5;
-    }
-
-    //control the position of the vehicle
-
-    if (keyIsDown(key.arrowRight)) {
-      value.vehicleDirection += 0.5;
-    } else if (keyIsDown(key.arrowLeft)) {
-      value.vehicleDirection += -0.5;
-    }
-
-    //controls that vehicle doesn't fly beyond the canvas height or width
-    if (value.vehicleY < 0) {
-      value.velocity = 0.5;
-    } else if (value.vehicleX < -30) {
-      value.vehicleX = -30;
-    } else if (value.vehicleX > 570) {
-      value.vehicleX = 570;
-    }
-
-    //The following 3 lines of code was adapted from: https://editor.p5js.org/marynotari/sketches/S1T2ZTMp- / 2024-02-08
-    if (frameCount % 60 === 0 && timer > 0) {
-      timer--;
-    }
-
-    //controls if the player win or loses the game
-    if (value.vehicleY > 500) {
-      if (value.velocity < 5) {
+      //controls if the player win or loses the game
+      if (value.vehicleY > 500) {
+        if (value.velocity < 3 && timer > 0) {
+          state = "landedScreen";
+        } else {
+          state = "end";
+        }
+      } else if (
+        //crash left side of building, right side of car
+        value.vehicleY > obstacle.y &&
+        value.vehicleX + 100 > obstacle.x
+      ) {
         state = "end";
-      } else {
+        console.log("collide left");
+        obstacle.x = 700;
+      } else if (
+        //crash right side of obstacle1
+        value.vehicleY > obstacle1.y &&
+        value.vehicleX < obstacle1.x + 230
+      ) {
         state = "end";
-      }
+        console.log("collide right one");
+        obstacle.x = 700;
+      } else if (
+        //crash right side of obstacle2
+        value.vehicleY > obstacle2.y &&
+        value.vehicleX < obstacle2.x
+      ) {
+        console.log("collide right two");
+      } else if (
+        //crash right side of obstacle3
+        value.vehicleY > obstacle3.y &&
+        value.vehicleX < obstacle3.x
+      )
+        console.log("collide right three");
     }
   }
+
+  vehicle(value.vehicleX, value.vehicleY);
+
+  textSize(20);
+  text("Time", 25, 40);
+  text("Velocity", 25, 70);
+
+  text(timer, 200, 40);
+  text(Math.floor(value.velocity), 200, 70);
+
+  //how the vehicle falls
+  value.vehicleY += value.velocity;
+  value.vehicleX += value.vehicleDirection;
+
+  if (value.vehicleDirection < 0) {
+    value.vehicleDirection -= value.friction;
+  } else if (value.vehicleDirection > 0) {
+    value.vehicleDirection += value.friction;
+  }
+  value.velocity += value.acceleration;
+
+  //control the thrusters/speed with the spacebar or up-arrow
+  if (keyIsDown(key.spacebar)) {
+    value.velocity -= 0.5;
+  } else if (keyIsDown(key.arrowUp)) {
+    value.velocity -= 0.5;
+  }
+
+  //control the position of the vehicle
+
+  if (keyIsDown(key.arrowRight)) {
+    value.vehicleDirection += 0.5;
+  } else if (keyIsDown(key.arrowLeft)) {
+    value.vehicleDirection += -0.5;
+  }
+
+  //controls that vehicle doesn't fly beyond the canvas height or width
+  if (value.vehicleY < 0) {
+    value.velocity = 0.5;
+  } else if (value.vehicleX < -30) {
+    value.vehicleX = -30;
+  } else if (value.vehicleX > 570) {
+    value.vehicleX = 570;
+  }
+}
+
+function landedScreen() {
+  rect(175, 90, 230, 100);
+  //The following 1 line of code was addapted from: https://www.geeksforgeeks.org/p5-js-textsize-function/ - 2024-02-07
+  textSize(50);
+  text("WINNER", 190, 155);
+}
+function toFastScreen() {
+  rect(175, 90, 230, 100);
+  textSize(50);
+  text("To fast!", 210, 155);
+}
+function crashedScreen() {
+  rect(175, 90, 400, 100);
+  textSize(50);
+  text("You hit a building", 185, 155);
+}
+
+function timeRanOutScreen() {
+  rect(175, 90, 320, 100);
+  textSize(50);
+  text("Timer ran out", 185, 155);
 }
 
 function resultScreen() {
   scenary();
-  if (value.velocity < 5) {
+  textSize(20);
+  text("Timer", 25, 40);
+  text("Velocity", 25, 70);
+
+  text(timer, 200, 40);
+  text(Math.floor(value.velocity), 200, 70);
+
+  if (value.velocity < 3 && timer > 0) {
     //win box
-    rect(175, 90, 230, 100);
-    //The following 1 line of code was addapted from: https://www.geeksforgeeks.org/p5-js-textsize-function/ - 2024-02-07
-    textSize(50);
-    text("WINNER", 190, 155);
-  }
-  if (timer === 0) {
-    console.log("timer ended");
-  } else {
+    state = "youLanded";
+  } else if (value.velocity > 3) {
     //loss box
-    rect(175, 90, 230, 100);
-    textSize(50);
-    text("LOSS", 220, 155);
+    state = "tooFast";
   }
 
   //restart button
@@ -295,6 +357,7 @@ function mouseClicked() {
     value.vehicleY = 90;
     value.velocity = 0.5;
     value.obstacleX = 600;
+    timer = 4;
     state = "game";
   } else if (
     //restart game button
@@ -307,6 +370,7 @@ function mouseClicked() {
     value.vehicleY = 90;
     value.velocity = 0.5;
     value.obstacleX = 600;
+    timer = 4;
     state = "game";
   }
 }
@@ -317,6 +381,14 @@ function draw() {
     startScreen();
   } else if (state === "game") {
     gameScreen();
+  } else if (state === "youLanded") {
+    landedScreen();
+  } else if (state === "tooFast") {
+    toFastScreen();
+  } else if (state === "youCrashed") {
+    crashedScreen();
+  } else if (state === "timeout") {
+    timeRanOutScreen();
   } else if (state === "end") {
     resultScreen();
   }
