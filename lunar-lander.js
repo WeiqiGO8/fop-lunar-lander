@@ -1,7 +1,7 @@
 angleMode(DEGREES);
 //varables
 let state = "start";
-let timer = 4;
+let timer = 10;
 
 //arrays
 let arrayObstacles = [];
@@ -217,20 +217,27 @@ function gameScreen() {
       }
 
       //controls if the player win or loses the game
-      if (value.vehicleY > 500) {
-        if (value.velocity < 3 && timer > 0) {
-          state = "winner";
-        } else {
-          state = "end";
-        }
+      if (value.vehicleY > 500 && value.velocity < 3) {
+        state = "win";
+      } else if (value.vehicleY > 500 && value.velocity > 3) {
+        state = "loss";
       } else if (
-        //crash left side of building, right side of car
-        //the following 3 lines of code was addapted from ChatGPT: https://chat.openai.com/c/03704b0d-fd9c-4368-9ee8-e74f0366dc13 - 2024-02-12
-        value.vehicleY > obstacle.y - 40 &&
+        //the following 5 lines of codes was adapted from ChatGPT: https://chat.openai.com/c/03704b0d-fd9c-4368-9ee8-e74f0366dc13 - 2024-02-12
+        value.vehicleY > obstacle.y - 60 &&
+        value.vehicleY < obstacle.y &&
+        value.vehicleX + 100 > obstacle.x &&
+        value.vehicleX < obstacle.x + 150 &&
+        value.velocity < 3
+      ) {
+        state = "win";
+      } else if (
+        // crash left side of building, right side of car
+        // the following 3 lines of code was addapted from ChatGPT: https://chat.openai.com/c/03704b0d-fd9c-4368-9ee8-e74f0366dc13 - 2024-02-12
+        value.vehicleY > obstacle.y - 50 &&
         value.vehicleX + 100 > obstacle.x &&
         value.vehicleX < obstacle.x + 100
       ) {
-        state = "youCrashed";
+        state = "loss";
         obstacle.x = 700;
       }
     }
@@ -278,66 +285,50 @@ function gameScreen() {
     } else if (value.vehicleX > 570) {
       value.vehicleX = 570;
     }
-
-    if (value.vehicleY > 500 && value.velocity < 3 && timer > 0) {
-      state = "winner";
-      rect(175, 90, 230, 100);
-      //The following 1 line of code was addapted from: https://www.geeksforgeeks.org/p5-js-textsize-function/ - 2024-02-07
-      textSize(50);
-      text("WINNER", 190, 155);
-
-      //restart button
-      rect(175, 200, 230, 60);
-      textSize(20);
-      text("Restart Game", 235, 235);
-    }
-
-    if (timer === 0 || (value.vehicleY > 500 && value.velocity >= 3)) {
-      state = "end";
-      rect(175, 90, 320, 100);
-      textSize(50);
-      text("Timer ran out", 185, 155);
-      //restart button
-      rect(175, 200, 230, 60);
-      textSize(20);
-      text("Restart Game", 235, 235);
-    }
   }
 }
 
-function resultScreen() {
-  scenary();
-  textSize(20);
-  text("Timer", 25, 40);
-  text("Velocity", 25, 70);
+function winScreen() {
+  if (state === "win") {
+    scenary();
 
-  text(timer, 200, 40);
-  text(Math.floor(value.velocity), 200, 70);
+    textSize(20);
+    text("Timer", 25, 40);
+    text("Velocity", 25, 70);
 
-  if (state === "end") {
+    text(timer, 200, 40);
+    text(Math.floor(value.velocity), 200, 70);
+
+    rect(175, 130, 230, 60);
+    textSize(20);
+    text("You Won!", 235, 165);
+
     //restart button
     rect(175, 200, 230, 60);
     textSize(20);
     text("Restart Game", 235, 235);
+  }
+}
 
-    // if (state === "winner") {
-    // }
-    // else if (state === "groundCrash") {
-    //   rect(175, 90, 230, 100);
-    //   textSize(50);
-    //   text("To fast", 210, 155);
-    // }
-    // else if (state === "obstacleCrash") {
-    //   rect(175, 90, 400, 100);
-    //   textSize(50);
-    //   text("You hit a building", 185, 155);
-    // // }
-    // else if (state === "timeout") {
-    //   rect(175, 90, 320, 100);
-    //   textSize(50);
-    //   text("Timer ran out", 185, 155);
+function lossScreen() {
+  if (state === "loss") {
+    scenary();
 
-    // }
+    textSize(20);
+    text("Timer", 25, 40);
+    text("Velocity", 25, 70);
+
+    text(timer, 200, 40);
+    text(Math.floor(value.velocity), 200, 70);
+
+    rect(175, 130, 230, 60);
+    textSize(20);
+    text("You Lost!", 235, 165);
+
+    //restart button
+    rect(175, 200, 230, 60);
+    textSize(20);
+    text("Restart Game", 235, 235);
   }
 }
 
@@ -354,20 +345,21 @@ function mouseClicked() {
     value.vehicleY = 90;
     value.velocity = 0.5;
     value.obstacleX = 600;
-    timer = 4;
+    timer = 10;
     state = "game";
   } else if (
     //restart game button
-    mouseX > 175 &&
-    mouseX < 175 + 230 &&
-    mouseY > 200 &&
-    mouseY < 200 + 60 &&
-    state === "end"
+    (mouseX > 175 &&
+      mouseX < 175 + 230 &&
+      mouseY > 200 &&
+      mouseY < 200 + 60 &&
+      state === "loss") ||
+    state === "win"
   ) {
     value.vehicleY = 90;
     value.velocity = 0.5;
     value.obstacleX = 600;
-    timer = 4;
+    timer = 10;
     state = "game";
   }
 }
@@ -378,7 +370,9 @@ function draw() {
     startScreen();
   } else if (state === "game") {
     gameScreen();
-  } else if (state === "end") {
-    resultScreen();
+  } else if (state === "win") {
+    winScreen();
+  } else if (state === "loss") {
+    lossScreen();
   }
 }
