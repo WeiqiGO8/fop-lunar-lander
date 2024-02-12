@@ -1,4 +1,11 @@
-angleMode(DEGREES);
+//setup the canvas
+function setup() {
+  let canvas = createCanvas(650, 650);
+  canvas.parent("canvas-holder");
+  background(255, 255, 255);
+  frameRate(30);
+}
+
 //varables
 let state = "start";
 let timer = 10;
@@ -43,12 +50,6 @@ arrayObstacles.push({
   y: 280,
   draw: obstacle3,
 });
-
-//setup the canvas
-function setup() {
-  createCanvas(650, 650);
-  background(255, 255, 255);
-}
 
 function scenary() {
   push();
