@@ -219,8 +219,10 @@ function gameScreen() {
       //controls if the player win or loses the game
       if (value.vehicleY > 500 && value.velocity < 3) {
         state = "win";
+        obstacle.x = 700;
       } else if (value.vehicleY > 500 && value.velocity > 3) {
         state = "loss";
+        obstacle.x = 700;
       } else if (
         //the following 5 lines of codes was adapted from ChatGPT: https://chat.openai.com/c/03704b0d-fd9c-4368-9ee8-e74f0366dc13 - 2024-02-12
         value.vehicleY > obstacle.y - 60 &&
@@ -230,6 +232,7 @@ function gameScreen() {
         value.velocity < 3
       ) {
         state = "win";
+        obstacle.x = 700;
       } else if (
         // crash left side of building, right side of car
         // the following 3 lines of code was addapted from ChatGPT: https://chat.openai.com/c/03704b0d-fd9c-4368-9ee8-e74f0366dc13 - 2024-02-12
