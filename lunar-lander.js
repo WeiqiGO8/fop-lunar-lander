@@ -8,7 +8,7 @@ function setup() {
 
 //varables
 let state = "start";
-let timer = 10;
+let timer = 8;
 
 //arrays
 let arrayObstacles = [];
@@ -163,10 +163,29 @@ function vehicle(x, y) {
   //base of the vehicle
   rect(0, 0, 100, 50, 10);
 
+  //windows
+  fill(255, 255, 255);
+  rect(60, -30, 10, 30, 40);
+
+  //lights
+  fill(255, 255, 0);
+  ellipse(95, 9, 10, 20);
+  fill(255, 0, 0);
+  ellipse(5, 9, 8, 10);
+
   //wheels
   fill(0, 0, 0);
   ellipse(10, 50, 20);
   ellipse(90, 50, 20);
+
+  //things on the wheels
+  fill(50, 50, 50);
+  ellipse(10, 50, 13);
+  ellipse(90, 50, 13);
+
+  fill(255, 255, 255);
+  ellipse(10, 50, 5);
+  ellipse(90, 50, 5);
 
   pop();
 }
@@ -222,6 +241,9 @@ function gameScreen() {
         state = "win";
         obstacle.x = 700;
       } else if (value.vehicleY > 500 && value.velocity > 3) {
+        state = "loss";
+        obstacle.x = 700;
+      } else if (timer <= 0) {
         state = "loss";
         obstacle.x = 700;
       } else if (
@@ -349,7 +371,7 @@ function mouseClicked() {
     value.vehicleY = 90;
     value.velocity = 0.5;
     value.obstacleX = 600;
-    timer = 10;
+    timer = 8;
     state = "game";
   } else if (
     //restart game button
@@ -363,7 +385,7 @@ function mouseClicked() {
     value.vehicleY = 90;
     value.velocity = 0.5;
     value.obstacleX = 600;
-    timer = 10;
+    timer = 8;
     state = "game";
   }
 }
